@@ -9,7 +9,7 @@ OS: Ubuntu mate 16.04 LTS
 Author: Vikrant Patel
 =end
 
-# # to generate 10 million random numbers and save it to test.txt; use below mentioned three lines in IRB
+# # to generate 10 million random numbers and save it to random_numbers.txt; use below mentioned three lines in IRB
 # File.open('random_numbers.txt', 'w') do |line|
 #   line.puts 10_000_000.times.map{ Random.rand(99) }
 # end
@@ -30,3 +30,8 @@ end
 # sort ranged_array
 ranged_array = sort_array(ranged_array)
 
+# Writing sorted numbers to file
+File.open("sorted_numbers.txt", "w") do |line|
+  line.puts(ranged_array)
+end
+puts "Data inside 'random_numbers.txt' has been sorted and stored into 'sorted_numbers.txt'."
