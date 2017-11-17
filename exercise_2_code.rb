@@ -13,6 +13,7 @@ Author: Vikrant Patel
 # File.open('random_numbers.txt', 'w') do |line|
 #   line.puts 10_000_000.times.map{ Random.rand(99) }
 # end
+require_relative 'sort_array'
 ranged_array = []
 
 # taken a dataset of 100000 numbers
@@ -25,4 +26,7 @@ end
 File.foreach( 'random_numbers.txt' ) do |line|
   ranged_array.push line.to_i
 end
+
+# sort ranged_array
+ranged_array = sort_array(ranged_array)
 
