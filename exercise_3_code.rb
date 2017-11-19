@@ -12,34 +12,36 @@ OS: Ubuntu mate 16.04 LTS
 Author: Vikrant Patel
 =end
 
-def get_controller_actions(file_name, controller_name)
-  controller_actions = {}
+def get_controller_statistics(file_name)
+  controller_statistics = Hash.new {|hash,key| hash[key] = Hash.new(&hash.default_proc) }
 
   File.open(file_name).each do |line|
-    if (line =~ /#{controller_name}/)
-      # Get controller action from the fetched line.
-      controller_action = line.split("#")[1].split(" ").first
+    if (line =~ /Controller/)
 
-      # controller_actions.key?(controller_action) ? controller_actions[controller_action] += 1 : controller_actions[controller_action] = 1
-      if controller_actions.key?(controller_action)
-        controller_actions[controller_action] += 1
+      # Get controller and its related actions as an array.
+      controller_with_action = line.split("Controller#")
+
+      controller_name = controller_with_action[0].split(" ").last
+      controller_action = controller_with_action[1].split(" ").first
+
+      # Check if there is any entry for fetched controller action.
+      if controller_statistics[controller_name].key?(controller_action)
+        controller_statistics[controller_name][controller_action] += 1
 
       else
-        controller_actions[controller_action] = 1
+        controller_statistics[controller_name][controller_action] = 1
 
       end
     end
   end
 
-  controller_actions.empty? ? (return nil) : (return controller_actions)
+  controller_statistics.empty? ? (return nil) : (return controller_statistics)
 
 end
 
-get_controller_actions("development.log", "SprintsController").each do |key, value|
-  puts "SprintsController => #{key} action ran #{value} times."
+# Print return value of get_controller_statistics method.
+get_controller_statistics("development.log").each do |controler_name, value|
+  value.each do |action_name, occurrence|
+    puts "#{controler_name}Controller => #{action_name} action ran #{occurrence} times."
+  end
 end
-
-# # If user wants to check other controller's actions
-# get_controller_actions("development.log", "ApplicationController").each do |key, value|
-#   puts "ApplicationController => #{key} action ran #{value} times."
-# end
