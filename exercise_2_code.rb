@@ -13,25 +13,35 @@ Author: Vikrant Patel
 # File.open('random_numbers.txt', 'w') do |line|
 #   line.puts 10_000_000.times.map{ Random.rand(99) }
 # end
-require_relative 'sort_array'
-ranged_array = []
+def sort_random_interger_file_data( file_name )
+  require_relative 'sort_array'
+  ranged_array = []
 
-# taken a dataset of 100000 numbers
-File.open('random_numbers.txt', 'w') do |line|
-  line.puts 1_000.times.map{ Random.rand(99) }
-  puts "'random_numbers.txt' has been create, with random integers ranging from 0 to 99."
+  unless File.file?( file_name )
+    puts "file is not present; so creating '#{file_name}'."
+    # taken a dataset of 100000 numbers
+    File.open(file_name, 'w') do |line|
+      line.puts 10_000_000.times.map{ Random.rand(99) }
+      puts "'#{file_name}' has been created, with random integers ranging from 0 to 99."
+    end
+  end
+
+  # fetch all the number from 'random_numbers.txt' into an array.
+  File.foreach( file_name ) do |line|
+    ranged_array.push line.to_i
+  end
+  puts "Taken data dump of unsorted data."
+
+  # sort ranged_array
+  ranged_array = sort_array(ranged_array)
+  puts "sorted data dump."
+
+  # Writing sorted numbers to file
+  File.open("sorted_numbers.txt", "w") do |line|
+    line.puts(ranged_array)
+  end
+  puts "Sorted data is stored into 'sorted_numbers.txt'."
 end
 
-# fetch all the number from 'random_numbers.txt' into an array.
-File.foreach( 'random_numbers.txt' ) do |line|
-  ranged_array.push line.to_i
-end
-
-# sort ranged_array
-ranged_array = sort_array(ranged_array)
-
-# Writing sorted numbers to file
-File.open("sorted_numbers.txt", "w") do |line|
-  line.puts(ranged_array)
-end
-puts "Data inside 'random_numbers.txt' has been sorted and stored into 'sorted_numbers.txt'."
+# Calling method for execution
+sort_random_interger_file_data( "random_numbers.txt" )
